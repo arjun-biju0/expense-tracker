@@ -29,4 +29,16 @@ const transactionsUpdate=async(req,res,next)=>{
     }
 }
 
-module.exports={transactionsUpdate}
+const getTransactions=async(req,res,next)=>{
+    const {user_id}=req.params;
+    try {
+        const result=await pool.query('SELECT * FROM transactions where user_id= $1',[user_id])
+        // console.log(result);
+        res.status(200).json({data: result.rows})
+        
+    } catch (error) {
+        res.status(500).json({ error: 'Database error', details: err.message })
+    }
+}
+
+module.exports={transactionsUpdate, getTransactions}

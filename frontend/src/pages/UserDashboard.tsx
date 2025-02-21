@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import axios from "axios";
@@ -14,10 +14,26 @@ const Dashboard: React.FC = () => {
   const [description, setDescription] = useState("");
   const [type, setType] = useState("Income");
 
+  useEffect(()=>{
+    const getTransactions=async()=>{
+        const result=await axios.get(`http://localhost:3000/dashboard/${1}`)
+        console.log(result.data.data);
+        const modifiedTransactions = result.data.data.map((transaction: any) => ({
+            ...transaction,
+            type: transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1), // Capitalize first letter
+            amount:Number(transaction.amount)
+        }));
+        setTransactions(modifiedTransactions)
+        
+    }
+    getTransactions()
+  },[])
+
   // Calculate financial summary
+  
   const totalIncome = transactions
     .filter((t) => t.type === "Income")
-    .reduce((sum, t) => sum + t.amount, 0);
+    .reduce((sum, t) => sum + t.amount,0);
   const totalExpenses = transactions
     .filter((t) => t.type === "Expense")
     .reduce((sum, t) => sum + t.amount, 0);
@@ -38,6 +54,7 @@ const Dashboard: React.FC = () => {
     setTransactions([...transactions, newTransaction]);
     setAmount(0);
     setDescription("");
+    // window.location.reload()
   };
 
   // Delete transaction
