@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import axios from "axios";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Dashboard: React.FC = () => {
   const [user] = useState("Arjun");
@@ -19,7 +24,7 @@ const Dashboard: React.FC = () => {
   const savings = totalIncome - totalExpenses;
 
   // Add transaction
-  const handleAddTransaction = () => {
+  const handleAddTransaction = async () => {
     if (!amount || !description) return;
     const newTransaction = {
       id: transactions.length + 1,
@@ -27,18 +32,38 @@ const Dashboard: React.FC = () => {
       type,
       description,
     };
+    const result=await axios.post(`http://localhost:3000/dashboard/${1}`, newTransaction)
+    console.log(result);
+    
     setTransactions([...transactions, newTransaction]);
     setAmount(0);
     setDescription("");
   };
 
+  // Delete transaction
+  const handleDeleteTransaction = (id: number) => {
+    setTransactions(transactions.filter((t) => t.id !== id));
+  };
+
+  // Chart Data
+  const chartData = {
+    labels: ["Income", "Expenses"],
+    datasets: [
+      {
+        data: [totalIncome, totalExpenses],
+        backgroundColor: ["#4CAF50", "#F44336"],
+        hoverBackgroundColor: ["#388E3C", "#D32F2F"],
+      },
+    ],
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 w-full">
       {/* Navbar */}
-      <nav className="w-full bg-blue-600 text-white px-6 py-4 shadow-md">
+      <nav className="bg-blue-600 text-white px-10 py-4 shadow-md w-full">
         <div className="flex justify-between items-center">
           <h1 className="text-lg font-semibold">Finance Manager</h1>
-          <div className="flex space-x-4">
+          <div className="flex space-x-6">
             <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-semibold">
               Dashboard
             </button>
@@ -49,56 +74,56 @@ const Dashboard: React.FC = () => {
       </nav>
 
       {/* Dashboard Content */}
-      <div className="max-w-4xl mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
-        <h2 className="text-2xl font-semibold text-center">
+      <div className="w-full px-10 py-6">
+        <h2 className="text-3xl font-semibold text-center mb-6">
           Welcome, {user}! 🎉
         </h2>
 
         {/* Financial Overview */}
-        <div className="mt-6 grid grid-cols-3 gap-4">
-          <div className="p-4 bg-green-100 rounded-lg text-center">
-            <h3 className="text-sm font-semibold">Total Income</h3>
-            <p className="text-lg font-bold">${totalIncome}</p>
+        <div className="grid grid-cols-3 gap-6">
+          <div className="p-6 bg-green-100 rounded-lg text-center">
+            <h3 className="text-lg font-semibold">Total Income</h3>
+            <p className="text-2xl font-bold">${totalIncome}</p>
           </div>
-          <div className="p-4 bg-red-100 rounded-lg text-center">
-            <h3 className="text-sm font-semibold">Total Expenses</h3>
-            <p className="text-lg font-bold">${totalExpenses}</p>
+          <div className="p-6 bg-red-100 rounded-lg text-center">
+            <h3 className="text-lg font-semibold">Total Expenses</h3>
+            <p className="text-2xl font-bold">${totalExpenses}</p>
           </div>
-          <div className="p-4 bg-yellow-100 rounded-lg text-center">
-            <h3 className="text-sm font-semibold">Savings</h3>
-            <p className="text-lg font-bold">${savings}</p>
+          <div className="p-6 bg-yellow-100 rounded-lg text-center">
+            <h3 className="text-lg font-semibold">Savings</h3>
+            <p className="text-2xl font-bold">${savings}</p>
           </div>
         </div>
 
         {/* Add Transaction */}
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+        <div className="mt-6 p-6 bg-white shadow-md rounded-lg">
           <h3 className="text-lg font-semibold text-center">Add a Transaction</h3>
-          <div className="mt-4 flex space-x-2">
+          <div className="mt-4 flex space-x-4">
             <input
               type="number"
               value={amount}
               onChange={(e) => setAmount(parseFloat(e.target.value))}
-              className="w-1/4 p-2 border rounded-md"
+              className="w-1/4 p-3 border rounded-md"
               placeholder="Amount"
             />
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-1/2 p-2 border rounded-md"
+              className="w-1/2 p-3 border rounded-md"
               placeholder="Description"
             />
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="p-2 border rounded-md"
+              className="p-3 border rounded-md"
             >
               <option>Income</option>
               <option>Expense</option>
             </select>
             <button
               onClick={handleAddTransaction}
-              className="bg-blue-600 text-white px-4 py-2 rounded-md font-semibold"
+              className="bg-blue-600 text-white px-5 py-3 rounded-md font-semibold"
             >
               + Add
             </button>
@@ -113,19 +138,38 @@ const Dashboard: React.FC = () => {
           ) : (
             <ul className="mt-2">
               {transactions.map((t) => (
-                <li key={t.id} className="p-2 border-b flex justify-between">
+                <li
+                  key={t.id}
+                  className="p-3 border-b flex justify-between items-center"
+                >
                   <span>{t.description}</span>
                   <span
                     className={`${
                       t.type === "Income" ? "text-green-600" : "text-red-600"
-                    }`}
+                    } text-lg font-bold`}
                   >
                     ${t.amount}
                   </span>
+                  <button
+                    onClick={() => handleDeleteTransaction(t.id)}
+                    className="bg-red-500 text-white px-3 py-1 rounded-md text-sm"
+                  >
+                    Delete
+                  </button>
                 </li>
               ))}
             </ul>
           )}
+        </div>
+
+        {/* Pie Chart */}
+        <div className="mt-8 p-6 bg-white shadow-md rounded-lg">
+          <h3 className="text-lg font-semibold text-center">Income vs Expenses</h3>
+          <div className="flex justify-center mt-4">
+            <div className="w-64 h-64">
+              <Pie data={chartData} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

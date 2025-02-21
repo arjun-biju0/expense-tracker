@@ -32,7 +32,7 @@ const getUserById=async(req,res,next)=>{
     try {
         const user=await getUserByIdService(id);
         if(!user) return handleResponse(res,404,"User does not exist");
-        handleResponse(res,201,"User Created successfully",newUser)
+        handleResponse(res,201,"User fetched successfully",user)
     } catch (error) {
         next(error)
     }
