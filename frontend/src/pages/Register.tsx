@@ -20,6 +20,13 @@ const Register = () => {
     axios.post('http://localhost:3000/register', formData)
     // Handle registration logic here
     console.log(formData);
+    setFormData({
+      name:"",
+      username:"",
+      email:"",
+      password:"",
+      confirmPassword:""
+    })
   };
 
   return (

@@ -1,14 +1,22 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const navigate=useNavigate()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Logging in with:", { email, password });
+    console.log("Logging in with:", { username, password });
     // Add authentication logic here
+    const result= await axios.post('http://localhost:3000/login',{username,password})
+    if(result.status===200){
+        navigate('/dashboard')
+    }
+    console.log(result);
+    
   };
 
   return (
@@ -17,14 +25,14 @@ const Login = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-700">Email</label>
+            <label className="block text-gray-700">Username</label>
             <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              value={username}
+              onChange={(e) => setUserName(e.target.value)}
               required
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring focus:ring-blue-300"
-              placeholder="Enter your email"
+              placeholder="Enter your username"
             />
           </div>
           <div>
