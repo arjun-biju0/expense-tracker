@@ -7,13 +7,14 @@ import axios from "axios";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Dashboard: React.FC = () => {
-  const [user] = useState("Arjun");
+  const [user,setUser] = useState("Arjun");
   const [transactions, setTransactions] = useState<
-    { id: number; amount: number; type: string; description: string }[]
+    { id: number; amount: number; type: string; description: string, date: string }[]
   >([]);
   const [amount, setAmount] = useState<number>(0);
   const [description, setDescription] = useState("");
   const [type, setType] = useState("Income");
+  const [date, setDate] = useState<string>(new Date().toISOString().split("T")[0]); // Default to today
   const navigate=useNavigate()
   const auth=async ()=>{
     const token = localStorage.getItem('token');
@@ -53,6 +54,7 @@ const Dashboard: React.FC = () => {
                 Authorization: `Bearer ${token}`
             }
         })
+        setUser(result.data.username)
         const modifiedTransactions = result.data.data.map((transaction: any) => ({
             ...transaction,
             type: transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1), // Capitalize first letter
@@ -82,7 +84,10 @@ const Dashboard: React.FC = () => {
       amount,
       type,
       description,
+      date
     };
+    console.log(newTransaction);
+    
     const token = localStorage.getItem('token');
     await axios.post(`http://localhost:3000/dashboard/addTransaction`, newTransaction,{
       headers: {
@@ -92,6 +97,7 @@ const Dashboard: React.FC = () => {
     setTransactions([...transactions, newTransaction]);
     setAmount(0);
     setDescription("");
+    setDate(new Date().toISOString().split("T")[0]); // Reset to today's date
     // window.location.reload()
   };
 
@@ -127,7 +133,7 @@ const Dashboard: React.FC = () => {
           <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-semibold">
             Dashboard
           </button>
-          <button className="hover:underline">Reports</button>
+          <button onClick={() => navigate("/reports", { state: { transactions } })} className="hover:underline">Reports</button>
           <button className="hover:underline">Budgeting</button>
         </div>
         <button
@@ -161,34 +167,40 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Add Transaction */}
-        <div className="mt-6 p-6 bg-white shadow-md rounded-lg">
-          <h3 className="text-lg font-semibold text-center">Add a Transaction</h3>
+        <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
+          <h3 className="text-xl font-semibold text-center">Add a Transaction</h3>
           <div className="mt-4 flex space-x-4">
             <input
               type="number"
               value={amount}
-              onChange={(e) => setAmount(parseFloat(e.target.value))}
-              className="w-1/4 p-3 border rounded-md"
+              onChange={(e) => setAmount(Number(e.target.value))}
               placeholder="Amount"
+              className="p-3 border rounded-md w-1/5"
             />
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-1/2 p-3 border rounded-md"
               placeholder="Description"
+              className="p-3 border rounded-md w-1/3"
+            />
+            <input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="p-3 border rounded-md w-1/5"
             />
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className="p-3 border rounded-md"
+              className="p-3 border rounded-md w-1/5"
             >
-              <option>Income</option>
-              <option>Expense</option>
+              <option value="Income">Income</option>
+              <option value="Expense">Expense</option>
             </select>
             <button
               onClick={handleAddTransaction}
-              className="bg-blue-600 text-white px-5 py-3 rounded-md font-semibold"
+              className="bg-blue-600 text-white px-4 py-3 rounded-md font-semibold"
             >
               + Add
             </button>

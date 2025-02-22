@@ -7,7 +7,8 @@ const createTransactionTable=async ()=>{
         user_id SERIAL NOT NULL,
         type VARCHAR(10) CHECK (type IN ('income', 'expense')) NOT NULL,
         amount DECIMAL(10, 2) NOT NULL,
-        description VARCHAR(100) NOT NULL
+        description VARCHAR(100) NOT NULL,
+        date VARCHAR(100) NOT NULL
         
     )
     `
