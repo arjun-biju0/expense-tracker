@@ -9,13 +9,12 @@ const Login = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Logging in with:", { username, password });
     // Add authentication logic here
     const result= await axios.post('http://localhost:3000/login',{username,password})
     if(result.status===200){
+        localStorage.setItem('token', result.data.token)
         navigate('/dashboard')
     }
-    console.log(result);
     
   };
 

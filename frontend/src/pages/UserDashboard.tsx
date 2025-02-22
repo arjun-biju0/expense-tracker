@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import axios from "axios";
@@ -13,11 +14,45 @@ const Dashboard: React.FC = () => {
   const [amount, setAmount] = useState<number>(0);
   const [description, setDescription] = useState("");
   const [type, setType] = useState("Income");
+  const navigate=useNavigate()
+  const auth=async ()=>{
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.log('No token found, redirecting to login...');
+      // Redirect user to login page if token is missing
+      window.location.href = '/';
+      return;
+    }
+    // try {
+    //     const response = await axios.get('http://localhost:3000/auth', {
+    //         headers: {
+    //             Authorization: `Bearer ${token}`
+    //         }
+    //     });
 
+    //     console.log('Dashboard Data:', response.data);
+    // } catch (error) {
+    //     console.error('Error fetching dashboard:', error.response?.data || error.message);
+    //     window.location.href = '/';
+
+    //     if (error.response?.status === 401 || error.response?.status === 403) {
+    //         console.log('Token expired or invalid, redirecting to login...');
+    //         localStorage.removeItem('token'); // Clear invalid token
+    //         // Redirect user to login page
+    //         window.location.href = '/';
+    //     }
+    // }
+    
+  }
+  auth()
   useEffect(()=>{
     const getTransactions=async()=>{
-        const result=await axios.get(`http://localhost:3000/dashboard/${1}`)
-        console.log(result.data.data);
+        const token=localStorage.getItem('token')
+        const result=await axios.get(`http://localhost:3000/dashboard/getTransactions`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
         const modifiedTransactions = result.data.data.map((transaction: any) => ({
             ...transaction,
             type: transaction.type.charAt(0).toUpperCase() + transaction.type.slice(1), // Capitalize first letter
@@ -48,14 +83,23 @@ const Dashboard: React.FC = () => {
       type,
       description,
     };
-    const result=await axios.post(`http://localhost:3000/dashboard/${1}`, newTransaction)
-    console.log(result);
-    
+    const token = localStorage.getItem('token');
+    await axios.post(`http://localhost:3000/dashboard/addTransaction`, newTransaction,{
+      headers: {
+          Authorization: `Bearer ${token}`
+      }
+  },)    
     setTransactions([...transactions, newTransaction]);
     setAmount(0);
     setDescription("");
     // window.location.reload()
   };
+
+  const handleLogout=()=>{
+    localStorage.removeItem("token"); // Clear token or session storage
+    navigate("/"); // Redirect to login page
+
+  }
 
   // Delete transaction
   const handleDeleteTransaction = (id: number) => {
@@ -77,17 +121,21 @@ const Dashboard: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-100 w-full">
       {/* Navbar */}
-      <nav className="bg-blue-600 text-white px-10 py-4 shadow-md w-full">
-        <div className="flex justify-between items-center">
-          <h1 className="text-lg font-semibold">Finance Manager</h1>
-          <div className="flex space-x-6">
-            <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-semibold">
-              Dashboard
-            </button>
-            <button className="hover:underline">Reports</button>
-            <button className="hover:underline">Budgeting</button>
-          </div>
+      <nav className="bg-blue-600 text-white px-10 py-4 shadow-md w-full flex justify-between items-center">
+        <h1 className="text-lg font-semibold">Finance Manager</h1>
+        <div className="flex space-x-6">
+          <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-semibold">
+            Dashboard
+          </button>
+          <button className="hover:underline">Reports</button>
+          <button className="hover:underline">Budgeting</button>
         </div>
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white px-4 py-2 rounded-md font-semibold"
+        >
+          Logout
+        </button>
       </nav>
 
       {/* Dashboard Content */}

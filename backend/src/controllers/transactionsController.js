@@ -2,7 +2,9 @@ const pool = require("../config/db.js");
 
 const transactionsUpdate=async(req,res,next)=>{
     const { type, amount, description} = req.body;
-    const {user_id}=req.params;
+    const user_id=req.user.userId;
+    console.log(user_id);
+    
     const lowerType=type.toLowerCase();
 
     if (!['income', 'expense'].includes(lowerType) || amount <= 0) {
@@ -30,7 +32,9 @@ const transactionsUpdate=async(req,res,next)=>{
 }
 
 const getTransactions=async(req,res,next)=>{
-    const {user_id}=req.params;
+    const user_id=req.user.userId;
+    console.log(req.user);
+    
     try {
         const result=await pool.query('SELECT * FROM transactions where user_id= $1',[user_id])
         // console.log(result);
