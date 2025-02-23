@@ -7,7 +7,7 @@ import axios from "axios";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const Dashboard: React.FC = () => {
-  const [user,setUser] = useState("Arjun");
+  const [user,setUser] = useState("");
   const [transactions, setTransactions] = useState<
     { id: number; amount: number; type: string; description: string, date: string }[]
   >([]);
@@ -134,7 +134,7 @@ const Dashboard: React.FC = () => {
             Dashboard
           </button>
           <button onClick={() => navigate("/reports", { state: { transactions } })} className="hover:underline">Reports</button>
-          <button className="hover:underline">Budgeting</button>
+          <button onClick={()=> navigate("/budgeting", { state: { transactions } })} className="hover:underline">Budgeting</button>
         </div>
         <button
           onClick={handleLogout}

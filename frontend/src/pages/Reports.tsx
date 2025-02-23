@@ -30,8 +30,8 @@ const Reports: React.FC = () => {
 
   // Logout function
   const handleLogout = () => {
-    localStorage.removeItem("authToken");
-    navigate("/login");
+    localStorage.removeItem("token");
+    navigate("/");
   };
   
   return (
@@ -42,7 +42,7 @@ const Reports: React.FC = () => {
         <div className="flex space-x-6">
           <button onClick={() => navigate("/dashboard")} className="hover:underline">Dashboard</button>
           <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-semibold">Reports</button>
-          <button className="hover:underline">Budgeting</button>
+          <button onClick={()=> navigate("/budgeting", { state: { transactions } })} className="hover:underline">Budgeting</button>
         </div>
         <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded-md font-semibold">
           Logout

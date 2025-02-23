@@ -4,6 +4,7 @@ import Login from './pages/Login';
 // import './App.css'
 import Dashboard from './pages/UserDashboard';
 import Reports from './pages/Reports';
+import Budgeting from './pages/Budgeting';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path='/register' element={<Register/>}/>
           <Route path='/dashboard' element={<Dashboard/>}/>
           <Route path='/reports' element={<Reports/>}/>
+          <Route path='/budgeting' element={<Budgeting/>}/>
         </Routes>
 
       
