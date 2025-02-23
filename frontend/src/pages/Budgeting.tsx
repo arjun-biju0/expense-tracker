@@ -25,53 +25,28 @@ const Budgeting: React.FC = () => {
 //   const totalSpent = expenses.reduce((sum: any, t: any) => sum + t.amount, 0);
   const [editBudgetId, setEditBudgetId] = useState<number | null>(null);
   const [newAmount, setNewAmount] = useState<number>(0);
+//   const checkBudgets = async () => {
+//     budgets.forEach(async (budget) => {
+//       const spent = categoryExpenses[budget.category] || 0;
+      
+//       if (spent > budget.amount) {
+//         // await fetch("http://localhost:5000/send-alert", {
+//         //   method: "POST",
+//         //   headers: { "Content-Type": "application/json" },
+//         //   body: JSON.stringify({
+//         //     email: "user@example.com", // Replace with actual user email from state
+//         //     category: budget.category,
+//         //     budget: budget.amount,
+//         //     spent: spent,
+//         //   }),
+//         // });
+//         const message="overspent"
+//         await axios.post('http://localhost:3000/budget/updateBudget', )
 
-  useEffect(()=>{
-    const getAllBudgets=async()=>{
-        const token= localStorage.getItem('token')
-        const result=await axios.get('http://localhost:3000/budget/getAllBudgets',{
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        const filteredBudgets = result.data.data.map(({ id, category , budget_amount }) => ({
-            id,
-            category,
-            amount:budget_amount,
-        }));
-        setBudgets(filteredBudgets)
-        
-    }
-    getAllBudgets()
-  },[])
-
-  // Handle budget input changes
-  const handleBudgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNewBudget({ ...newBudget, [e.target.name]: e.target.value });
-  };
-  
-  // Add new budget goal
-  const addBudget = async () => {
-    const token= localStorage.getItem('token')
-    if (!newBudget.category || !newBudget.amount) return;
-    const sendBudget={category: newBudget.category.toUpperCase(), amount: parseFloat(newBudget.amount)}
-    const updatedBudgets = [...budgets, { category: newBudget.category.toUpperCase(), amount: parseFloat(newBudget.amount) }];
-    try {
-        const result=await axios.post('http://localhost:3000/budget/addBudget', sendBudget, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        })
-        setBudgets(updatedBudgets);
-        localStorage.setItem("budgets", JSON.stringify(updatedBudgets));
-        setNewBudget({ category: "", amount: "" });
-        
-    } catch (error) {
-        console.log(error);
-        
-    }
-  };
-
+//         console.log(`📧 Alert sent for ${budget.category}`);
+//       }
+//     });
+//   };
   // Calculate total expenses per category
   const categoryExpenses: { [key: string]: number } = {};
 
@@ -102,6 +77,55 @@ const Budgeting: React.FC = () => {
         }
       };
 
+
+  useEffect(()=>{
+    const getAllBudgets=async()=>{
+        const token= localStorage.getItem('token')
+        const result=await axios.get('http://localhost:3000/budget/getAllBudgets',{
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        const filteredBudgets = result.data.data.map(({ id, category , budget_amount }) => ({
+            id,
+            category,
+            amount:budget_amount,
+        }));
+        setBudgets(filteredBudgets)
+        
+    }
+    getAllBudgets()
+    // checkBudgets()
+  },[])
+
+  // Handle budget input changes
+  const handleBudgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewBudget({ ...newBudget, [e.target.name]: e.target.value });
+  };
+  
+  // Add new budget goal
+  const addBudget = async () => {
+    const token= localStorage.getItem('token')
+    if (!newBudget.category || !newBudget.amount) return;
+    const sendBudget={category: newBudget.category.toUpperCase(), amount: parseFloat(newBudget.amount)}
+    const updatedBudgets = [...budgets, { category: newBudget.category.toUpperCase(), amount: parseFloat(newBudget.amount) }];
+    try {
+        const result=await axios.post('http://localhost:3000/budget/addBudget', sendBudget, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+        setBudgets(updatedBudgets);
+        localStorage.setItem("budgets", JSON.stringify(updatedBudgets));
+        setNewBudget({ category: "", amount: "" });
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
+  };
+
+  
     const handleDelete=async (id: number)=>{
         console.log(id);
         

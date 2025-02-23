@@ -213,31 +213,35 @@ const Dashboard: React.FC = () => {
           {transactions.length === 0 ? (
             <p className="text-gray-500 text-sm mt-2">No transactions added yet.</p>
           ) : (
-            <ul className="mt-2">
-              {transactions.map((t) => (
-                <li
-                  key={t.id}
-                  className="p-3 border-b flex justify-between items-center"
-                >
-                  <span>{t.description}</span>
-                  <span
-                    className={`${
-                      t.type === "Income" ? "text-green-600" : "text-red-600"
-                    } text-lg font-bold`}
+            // Scrollable container with max height
+            <div className="mt-2 max-h-60 overflow-y-auto border rounded-lg">
+              <ul>
+                {transactions.map((t) => (
+                  <li
+                    key={t.id}
+                    className="p-3 border-b flex justify-between items-center"
                   >
-                    ${t.amount}
-                  </span>
-                  <button
-                    onClick={() => handleDeleteTransaction(t.id)}
-                    className="bg-red-500 text-white px-3 py-1 rounded-md text-sm"
-                  >
-                    Delete
-                  </button>
-                </li>
-              ))}
-            </ul>
+                    <span>{t.description}</span>
+                    <span
+                      className={`${
+                        t.type === "Income" ? "text-green-600" : "text-red-600"
+                      } text-lg font-bold`}
+                    >
+                      ${t.amount}
+                    </span>
+                    <button
+                      onClick={() => handleDeleteTransaction(t.id)}
+                      className="bg-red-500 text-white px-3 py-1 rounded-md text-sm"
+                    >
+                      Delete
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
         </div>
+
 
         {/* Pie Chart */}
         <div className="mt-8 p-6 bg-white shadow-md rounded-lg">
