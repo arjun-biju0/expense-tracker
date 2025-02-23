@@ -17,7 +17,7 @@ const Register = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    axios.post('http://localhost:3000/register', formData)
+    axios.post('https://fj-be-r2-arjun-iit-kharagpur.onrender.com/register', formData)
     // Handle registration logic here
     console.log(formData);
     setFormData({

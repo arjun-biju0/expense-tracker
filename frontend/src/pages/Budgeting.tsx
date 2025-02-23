@@ -64,7 +64,7 @@ const Budgeting: React.FC = () => {
         // const budget=budgets.find(b=>b.id===editBudgetId)
         const newBudget={editBudgetId,newAmount}
         try {
-            await axios.post('http://localhost:3000/budget/updateBudget',newBudget,{
+            await axios.post('https://fj-be-r2-arjun-iit-kharagpur.onrender.com/budget/updateBudget',newBudget,{
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -81,7 +81,7 @@ const Budgeting: React.FC = () => {
   useEffect(()=>{
     const getAllBudgets=async()=>{
         const token= localStorage.getItem('token')
-        const result=await axios.get('http://localhost:3000/budget/getAllBudgets',{
+        const result=await axios.get('https://fj-be-r2-arjun-iit-kharagpur.onrender.com/budget/getAllBudgets',{
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -110,7 +110,7 @@ const Budgeting: React.FC = () => {
     const sendBudget={category: newBudget.category.toUpperCase(), amount: parseFloat(newBudget.amount)}
     const updatedBudgets = [...budgets, { category: newBudget.category.toUpperCase(), amount: parseFloat(newBudget.amount) }];
     try {
-        const result=await axios.post('http://localhost:3000/budget/addBudget', sendBudget, {
+        const result=await axios.post('https://fj-be-r2-arjun-iit-kharagpur.onrender.com/budget/addBudget', sendBudget, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -131,7 +131,7 @@ const Budgeting: React.FC = () => {
         
         const token= localStorage.getItem('token')
         try {
-            await axios.post('http://localhost:3000/budget/deleteBudget',{id},{
+            await axios.post('https://fj-be-r2-arjun-iit-kharagpur.onrender.com/budget/deleteBudget',{id},{
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

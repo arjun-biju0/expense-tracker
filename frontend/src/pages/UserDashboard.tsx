@@ -49,7 +49,7 @@ const Dashboard: React.FC = () => {
   useEffect(()=>{
     const getTransactions=async()=>{
         const token=localStorage.getItem('token')
-        const result=await axios.get(`http://localhost:3000/dashboard/getTransactions`,{
+        const result=await axios.get(`https://fj-be-r2-arjun-iit-kharagpur.onrender.com/dashboard/getTransactions`,{
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -89,7 +89,7 @@ const Dashboard: React.FC = () => {
     console.log(newTransaction);
     
     const token = localStorage.getItem('token');
-    await axios.post(`http://localhost:3000/dashboard/addTransaction`, newTransaction,{
+    await axios.post(`https://fj-be-r2-arjun-iit-kharagpur.onrender.com/dashboard/addTransaction`, newTransaction,{
       headers: {
           Authorization: `Bearer ${token}`
       }
