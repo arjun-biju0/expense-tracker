@@ -18,7 +18,7 @@ const app=express()
 app.use(express.json())
 // app.use(cors())
 app.use(cors({
-    origin: "http://localhost:5173",  // Allow requests from your frontend during development
+    origin: "https://fj-be-r2-arjun-iit-kharagpur-1.onrender.com",  // Allow requests from your frontend during development
     methods: "GET,POST,PUT,DELETE",
     credentials: true,  // Allow cookies if needed
   }));
