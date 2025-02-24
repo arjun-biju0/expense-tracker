@@ -32,7 +32,37 @@ const Reports: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/");
-  };
+  };const auth=async ()=>{
+    const token = localStorage.getItem('token');
+    if (!token) {
+      console.log('No token found, redirecting to login...');
+      // Redirect user to login page if token is missing
+      window.location.href = '/';
+      return;
+    }
+    // try {
+    //     const response = await axios.get('http://localhost:3000/auth', {
+    //         headers: {
+    //             Authorization: `Bearer ${token}`
+    //         }
+    //     });
+
+    //     console.log('Dashboard Data:', response.data);
+    // } catch (error) {
+    //     console.error('Error fetching dashboard:', error.response?.data || error.message);
+    //     window.location.href = '/';
+
+    //     if (error.response?.status === 401 || error.response?.status === 403) {
+    //         console.log('Token expired or invalid, redirecting to login...');
+    //         localStorage.removeItem('token'); // Clear invalid token
+    //         // Redirect user to login page
+    //         window.location.href = '/';
+    //     }
+    // }
+    
+  }
+  auth()
+
   
   return (
     <div className="min-h-screen bg-gray-100 w-full">
