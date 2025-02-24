@@ -11,6 +11,8 @@ const pool= new Pool({
     connectionString: process.env.NEON_URL,
     ssl: {
         rejectUnauthorized: false, // Required for Neon
+        idleTimeoutMillis: 30000,  // Close idle connections after 30s
+        connectionTimeoutMillis: 2000,
     },
 })
 

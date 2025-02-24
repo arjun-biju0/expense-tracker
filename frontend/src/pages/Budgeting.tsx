@@ -158,6 +158,7 @@ const Budgeting: React.FC = () => {
           <button onClick={() => navigate("/dashboard")} className="hover:underline">Dashboard</button>
           <button onClick={() => navigate("/reports", { state: { transactions } })} className="hover:underline">Reports</button>
           <button className="bg-white text-blue-600 px-4 py-2 rounded-md font-semibold">Budgeting</button>
+          <button onClick={()=> navigate("/splitExpenses", { state: { transactions } })} className="hover:underline">Split Expense</button>
         </div>
         <button 
           onClick={() => { localStorage.removeItem("token"); navigate("/"); }} 

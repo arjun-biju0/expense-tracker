@@ -135,6 +135,7 @@ const Dashboard: React.FC = () => {
           </button>
           <button onClick={() => navigate("/reports", { state: { transactions } })} className="hover:underline">Reports</button>
           <button onClick={()=> navigate("/budgeting", { state: { transactions } })} className="hover:underline">Budgeting</button>
+          <button onClick={()=> navigate("/splitExpenses", { state: { transactions } })} className="hover:underline">Split Expense</button>
         </div>
         <button
           onClick={handleLogout}
@@ -229,6 +230,7 @@ const Dashboard: React.FC = () => {
                     >
                       ${t.amount}
                     </span>
+                    <span>{t.date}</span>
                     <button
                       onClick={() => handleDeleteTransaction(t.id)}
                       className="bg-red-500 text-white px-3 py-1 rounded-md text-sm"
