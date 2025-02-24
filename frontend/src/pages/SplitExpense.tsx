@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import {  useNavigate, useLocation } from "react-router-dom";
 
 type SplitTransaction = {
   id: number;
@@ -20,7 +20,8 @@ const SplitExpenses : React.FC= () => {
     amount: "",
     splitWith: [] as { name: string; amount: number }[],
   });
-
+  console.log(expense);
+  
   useEffect(()=>{
     const getExpense=async()=>{
         const token=localStorage.getItem('token')
