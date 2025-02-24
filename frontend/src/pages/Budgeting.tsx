@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 interface Budget {
-    id: number;
+    id: number ;
     category: string;
     amount: number;
 }
@@ -86,7 +86,7 @@ const Budgeting: React.FC = () => {
                 Authorization: `Bearer ${token}`
             }
         })
-        const filteredBudgets = result.data.data.map(({ id, category , budget_amount }) => ({
+        const filteredBudgets = result.data.data.map(({ id, category , budget_amount}: any) => ({
             id,
             category,
             amount:budget_amount,
@@ -108,9 +108,9 @@ const Budgeting: React.FC = () => {
     const token= localStorage.getItem('token')
     if (!newBudget.category || !newBudget.amount) return;
     const sendBudget={category: newBudget.category.toUpperCase(), amount: parseFloat(newBudget.amount)}
-    const updatedBudgets = [...budgets, { category: newBudget.category.toUpperCase(), amount: parseFloat(newBudget.amount) }];
+    const updatedBudgets = [...budgets, { category: newBudget.category.toUpperCase(), amount: parseFloat(newBudget.amount), id: 1 }];
     try {
-        const result=await axios.post('https://fj-be-r2-arjun-iit-kharagpur.onrender.com/budget/addBudget', sendBudget, {
+        await axios.post('https://fj-be-r2-arjun-iit-kharagpur.onrender.com/budget/addBudget', sendBudget, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
